@@ -1,46 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <title>音樂播放清單</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🎵 我的音樂播放器</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: "Helvetica Neue", sans-serif;
+      background: linear-gradient(to bottom, #f9f9f9, #ececec);
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+
+    #nowPlaying {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    audio {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    ul#playlist {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul#playlist li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+    }
+
+    ul#playlist li.active {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8em;
+      margin-top: 30px;
+      color: #999;
+    }
+  </style>
 </head>
 <body>
-  <h2>🎵 我的音樂播放器</h2>
-  <audio id="audioPlayer" controls autoplay></audio>
+  <h2>🎵 Joda Child 睡前晚安曲</h2>
+  <div id="nowPlaying">載入中...</div>
+  <audio id="audioPlayer" controls></audio>
   <ul id="playlist"></ul>
+  <footer>Powered by GitHub Pages</footer>
 
   <script>
     let playlist = [];
     let current = 0;
+
+    const player = document.getElementById('audioPlayer');
+    const nowPlaying = document.getElementById('nowPlaying');
 
     fetch('playlist.json')
       .then(res => res.json())
       .then(data => {
         playlist = data;
         if (playlist.length === 0) {
-          document.body.innerHTML += "<p>找不到音樂檔案</p>";
+          nowPlaying.textContent = "找不到音樂檔案";
           return;
         }
-        playNext();
-        let ul = document.getElementById('playlist');
-        playlist.forEach((item, i) => {
-          let li = document.createElement('li');
-          li.textContent = item.name;
-          ul.appendChild(li);
-        });
+        setupPlaylist();
+        playTrack(current);
       });
 
-    function playNext() {
-      const player = document.getElementById('audioPlayer');
-      player.src = playlist[current].url;
-      player.play().catch(() => {
-        console.log("播放失敗，請手動播放");
+    function setupPlaylist() {
+      const ul = document.getElementById('playlist');
+      ul.innerHTML = '';
+      playlist.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.textContent = item.name;
+        li.addEventListener('click', () => {
+          playTrack(index);
+        });
+        ul.appendChild(li);
       });
-      player.onended = () => {
-        current = (current + 1) % playlist.length;
-        playNext();
-      };
     }
+
+    function playTrack(index) {
+      current = index;
+      player.src = playlist[current].url;
+      nowPlaying.textContent = `▶ 正在播放：${playlist[current].name}`;
+      highlightCurrent();
+      player.play().catch(() => {
+        nowPlaying.textContent = "無法自動播放，請手動點擊播放鍵";
+      });
+    }
+
+    function highlightCurrent() {
+      const listItems = document.querySelectorAll('#playlist li');
+      listItems.forEach((li, idx) => {
+        li.classList.toggle('active', idx === current);
+      });
+    }
+
+    player.onended = () => {
+      current = (current + 1) % playlist.length;
+      playTrack(current);
+    };
   </script>
 </body>
 </html>
