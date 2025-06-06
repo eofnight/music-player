@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🎵 Joda Child 睡前晚安曲</title>
+  <title>🎵Joda Child 睡前晚安曲</title>
   <style>
     body {
       margin: 0;
@@ -27,12 +27,29 @@
 
     audio {
       width: 100%;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+    }
+
+    #shuffleBtn {
+      display: block;
+      margin: 10px auto;
+      padding: 6px 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
     }
 
     ul#playlist {
       list-style: none;
       padding: 0;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 10px;
     }
 
     ul#playlist li {
@@ -56,15 +73,17 @@
   </style>
 </head>
 <body>
-  <h2>🎵 Joda Child 睡前晚安曲</h2>
+  <h2>🎵Joda Child 睡前晚安曲</h2>
   <div id="nowPlaying">載入中...</div>
   <audio id="audioPlayer" controls></audio>
+  <button onclick="toggleShuffle()" id="shuffleBtn">🔀 隨機播放：關</button>
   <ul id="playlist"></ul>
   <footer>Powered by GitHub Pages</footer>
 
   <script>
     let playlist = [];
     let current = 0;
+    let shuffle = false;
 
     const player = document.getElementById('audioPlayer');
     const nowPlaying = document.getElementById('nowPlaying');
@@ -111,9 +130,22 @@
       });
     }
 
+    function toggleShuffle() {
+      shuffle = !shuffle;
+      document.getElementById('shuffleBtn').textContent = shuffle ? "🔀 隨機播放：開" : "🔀 隨機播放：關";
+    }
+
     player.onended = () => {
-      current = (current + 1) % playlist.length;
-      playTrack(current);
+      if (shuffle) {
+        let next;
+        do {
+          next = Math.floor(Math.random() * playlist.length);
+        } while (next === current && playlist.length > 1);
+        playTrack(next);
+      } else {
+        current = (current + 1) % playlist.length;
+        playTrack(current);
+      }
     };
   </script>
 </body>
