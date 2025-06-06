@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>音樂播放清單</title>
+</head>
+<body>
+  <h2>🎵 我的音樂播放器</h2>
+  <audio id="audioPlayer" controls autoplay></audio>
+  <ul id="playlist"></ul>
+
+  <script>
+    let playlist = [];
+    let current = 0;
+
+    fetch('playlist.json')
+      .then(res => res.json())
+      .then(data => {
+        playlist = data;
+        if (playlist.length === 0) {
+          document.body.innerHTML += "<p>找不到音樂檔案</p>";
+          return;
+        }
+        playNext();
+        let ul = document.getElementById('playlist');
+        playlist.forEach((item, i) => {
+          let li = document.createElement('li');
+          li.textContent = item.name;
+          ul.appendChild(li);
+        });
+      });
+
+    function playNext() {
+      const player = document.getElementById('audioPlayer');
+      player.src = playlist[current].url;
+      player.play().catch(() => {
+        console.log("播放失敗，請手動播放");
+      });
+      player.onended = () => {
+        current = (current + 1) % playlist.length;
+        playNext();
+      };
+    }
+  </script>
+</body>
+</html>
