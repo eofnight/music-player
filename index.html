@@ -3,43 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🎵Joda Child 睡前晚安曲🎵</title>
+  <title>🎵Joda Child 睡前晚安曲</title>
   <style>
     body {
       margin: 0;
       padding: 20px;
-      font-family: "Helvetica Neue", sans-serif;
-      background: linear-gradient(to bottom, #f9f9f9, #ececec);
-      color: #333;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(145deg, #1c1c1c, #2c2c2c);
+      color: #fdd835;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.5em;
+      font-size: 1.8em;
+      color: #fdd835;
+      margin-bottom: 10px;
+      text-shadow: 0 0 5px #ffeb3b;
     }
 
     #nowPlaying {
       text-align: center;
       font-weight: bold;
-      margin-bottom: 10px;
+      margin: 10px 0;
+      color: #ffffff;
     }
 
     audio {
       width: 100%;
-      margin-bottom: 10px;
+      margin: 10px 0 20px 0;
+      background-color: #333;
+      border: 2px solid #fdd835;
+      border-radius: 8px;
     }
 
     #shuffleBtn {
       display: block;
       margin: 10px auto;
-      padding: 6px 12px;
+      padding: 8px 16px;
       font-size: 1em;
-      border: none;
+      font-weight: bold;
+      border: 2px solid #fdd835;
+      background-color: #212121;
+      color: #fdd835;
       border-radius: 5px;
-      background-color: #007bff;
-      color: white;
       cursor: pointer;
+    }
+
+    #shuffleBtn:hover {
+      background-color: #333;
     }
 
     ul#playlist {
@@ -47,20 +58,21 @@
       padding: 0;
       max-height: 200px;
       overflow-y: auto;
-      border: 1px solid #ccc;
+      border: 2px solid #fdd835;
       border-radius: 8px;
-      margin-top: 10px;
+      background-color: #121212;
     }
 
     ul#playlist li {
       padding: 10px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #444;
+      color: #fff;
       cursor: pointer;
     }
 
     ul#playlist li.active {
-      background-color: #d1ecf1;
-      color: #0c5460;
+      background-color: #fdd835;
+      color: #000;
       font-weight: bold;
     }
 
@@ -68,17 +80,28 @@
       text-align: center;
       font-size: 0.8em;
       margin-top: 30px;
-      color: #999;
+      color: #888;
+    }
+
+    @media screen and (max-width: 600px) {
+      h2 {
+        font-size: 1.5em;
+      }
+
+      #shuffleBtn {
+        font-size: 0.9em;
+        padding: 6px 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <h2>🎵Joda Child 睡前晚安曲</h2>
+  <h2>🎶 Winamp Player</h2>
   <div id="nowPlaying">載入中...</div>
   <audio id="audioPlayer" controls></audio>
   <button onclick="toggleShuffle()" id="shuffleBtn">🔀 隨機播放：關</button>
   <ul id="playlist"></ul>
-  <footer>Powered by GitHub Pages</footer>
+  <footer>Made with ❤️ on GitHub Pages</footer>
 
   <script>
     let playlist = [];
@@ -116,10 +139,10 @@
     function playTrack(index) {
       current = index;
       player.src = playlist[current].url;
-      nowPlaying.textContent = `▶ 正在播放：${playlist[current].name}`;
+      nowPlaying.textContent = `▶ 現在播放：${playlist[current].name}`;
       highlightCurrent();
       player.play().catch(() => {
-        nowPlaying.textContent = "無法自動播放，請手動點擊播放鍵";
+        nowPlaying.textContent = "請點擊播放鍵開始播放";
       });
     }
 
