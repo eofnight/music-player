@@ -123,7 +123,9 @@
     const player = document.getElementById('audioPlayer');
     const nowPlaying = document.getElementById('nowPlaying');
 
-    fetch('playlist.json')
+    const versionTag = `v=${Date.now()}`; // 每次載入都唯一
+
+    fetch(`playlist.json?${versionTag}`)
       .then(res => res.json())
       .then(data => {
         playlist = data;
