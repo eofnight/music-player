@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>🎵Joda Child 睡前晚安曲🎶v1.0.1</title>
+  <title>🎵Joda Child 睡前晚安曲🎶v1.0.4</title>
   <style>
     body {
       margin: 0;
@@ -111,22 +111,10 @@
   <ul id="playlist"></ul>
 
   <footer>
-    Made with ❤️ on GitHub Pages v1.0.3
+    Made with ❤️ on GitHub Pages
   </footer>
   <div class="version">v1.0.3</div>
 
-  <!-- ✅ 訪問紀錄送出到 Google Sheet -->
-  <script>
-    fetch("https://script.google.com/macros/s/AKfycbzPXqAbtOtWvjGXyWfr09akKGCE4jO9q-wVbLbFG8wsQs9pnyZQOMXyNbFtB3MlMuY0/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userAgent: navigator.userAgent
-      })
-    }).catch(err => console.warn("⚠️ 訪問紀錄失敗：", err));
-  </script>
-
-  <!-- ✅ 播放器邏輯 -->
   <script>
     let playlist = [];
     let current = 0;
