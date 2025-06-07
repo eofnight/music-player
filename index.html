@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🎵Joda Child 睡前晚安曲</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎵 Winamp 風格音樂播放器</title>
   <style>
     body {
       margin: 0;
@@ -83,6 +83,14 @@
       color: #888;
     }
 
+    .version {
+      position: fixed;
+      bottom: 10px;
+      right: 15px;
+      font-size: 0.75em;
+      color: #888;
+    }
+
     @media screen and (max-width: 600px) {
       h2 {
         font-size: 1.5em;
@@ -96,13 +104,29 @@
   </style>
 </head>
 <body>
-  <h2>🎵Joda Child 睡前晚安曲🎶</h2>
+  <h2>🎶 Winamp Player</h2>
   <div id="nowPlaying">載入中...</div>
   <audio id="audioPlayer" controls></audio>
   <button onclick="toggleShuffle()" id="shuffleBtn">🔀 隨機播放：關</button>
   <ul id="playlist"></ul>
-  <footer>Made with ❤️ on GitHub Pages</footer>
 
+  <footer>
+    Made with ❤️ on GitHub Pages
+  </footer>
+  <div class="version">v1.0.3</div>
+
+  <!-- ✅ 訪問紀錄送出到 Google Sheet -->
+  <script>
+    fetch("https://script.google.com/macros/s/AKfycbzPXqAbtOtWvjGXyWfr09akKGCE4jO9q-wVbLbFG8wsQs9pnyZQOMXyNbFtB3MlMuY0/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userAgent: navigator.userAgent
+      })
+    }).catch(err => console.warn("⚠️ 訪問紀錄失敗：", err));
+  </script>
+
+  <!-- ✅ 播放器邏輯 -->
   <script>
     let playlist = [];
     let current = 0;
@@ -173,4 +197,3 @@
   </script>
 </body>
 </html>
-
