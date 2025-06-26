@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🎵Joda Child 睡前晚安曲🎶</title>
-  <style id="theme-style">
-    /* 預設主題: 黑金 */
+  <style>
     body {
       background-color: #1e1e1e;
       color: #fdd835;
@@ -15,10 +14,6 @@
     }
     h2 {
       text-align: center;
-    }
-    #theme-selector {
-      margin: 0 auto 20px;
-      display: block;
     }
     #nowPlaying {
       text-align: center;
@@ -63,13 +58,6 @@
 </head>
 <body>
   <h2>🎵Joda Child 睡前晚安曲🎶</h2>
-  <label for="theme-selector">切換主題:</label>
-  <select id="theme-selector">
-    <option value="blackgold">黑金風</option>
-    <option value="neon">霜光夜</option>
-    <option value="lightblue">明亮白藍</option>
-    <option value="retro">復古磁帶</option>
-  </select>
 
   <div id="nowPlaying">載入中...</div>
   <audio id="audioPlayer" controls></audio>
@@ -83,19 +71,6 @@
   <div class="version">v1.1.0</div>
 
   <script>
-    const themes = {
-      blackgold: `body { background:#1e1e1e;color:#fdd835; } ul#playlist li.active{background:#fdd835;color:#000}`,
-      neon: `body { background:#0f0f2e;color:#39ff14; } ul#playlist li.active{background:#39ff14;color:#000}`,
-      lightblue: `body { background:#f0faff;color:#003366; } ul#playlist li.active{background:#003366;color:#fff}`,
-      retro: `body { background:#3b2f2f;color:#ffd700; } ul#playlist li.active{background:#ffd700;color:#000}`
-    };
-
-    const themeSelector = document.getElementById('theme-selector');
-    themeSelector.addEventListener('change', e => {
-      const styleEl = document.getElementById('theme-style');
-      styleEl.innerHTML = themes[e.target.value];
-    });
-
     let playlist = [];
     let current = 0;
     const player = document.getElementById('audioPlayer');
