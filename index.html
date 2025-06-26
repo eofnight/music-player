@@ -4,85 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🎵Joda Child 睡前晚安曲🎶</title>
-  <style>
+  <style id="theme-style">
+    /* 預設主題: 黑金 */
     body {
+      background-color: #1e1e1e;
+      color: #fdd835;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(145deg, #1c1c1c, #2c2c2c);
-      color: #fdd835;
     }
-
     h2 {
       text-align: center;
-      font-size: 1.8em;
-      color: #fdd835;
-      margin-bottom: 10px;
-      text-shadow: 0 0 5px #ffeb3b;
     }
-
+    #theme-selector {
+      margin: 0 auto 20px;
+      display: block;
+    }
     #nowPlaying {
       text-align: center;
       font-weight: bold;
-      margin: 10px 0;
-      color: #ffffff;
     }
-
     audio {
       width: 100%;
-      margin: 10px 0 20px 0;
-      background-color: #333;
-      border: 2px solid #fdd835;
-      border-radius: 8px;
+      margin: 10px 0;
     }
-
-    #shuffleBtn {
-      display: block;
-      margin: 10px auto;
-      padding: 8px 16px;
-      font-size: 1em;
-      font-weight: bold;
-      border: 2px solid #fdd835;
-      background-color: #212121;
-      color: #fdd835;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #shuffleBtn:hover {
-      background-color: #333;
-    }
-
     ul#playlist {
       list-style: none;
       padding: 0;
       max-height: 200px;
       overflow-y: auto;
-      border: 2px solid #fdd835;
-      border-radius: 8px;
-      background-color: #121212;
+      border: 1px solid #ccc;
     }
-
     ul#playlist li {
       padding: 10px;
-      border-bottom: 1px solid #444;
-      color: #fff;
+      border-bottom: 1px solid #333;
       cursor: pointer;
     }
-
     ul#playlist li.active {
-      background-color: #fdd835;
+      background: #fdd835;
       color: #000;
       font-weight: bold;
     }
-
-    footer {
-      text-align: center;
-      font-size: 0.8em;
+    #history {
       margin-top: 30px;
-      color: #888;
+      padding: 15px;
+      background: #2c2c2c;
+      color: #fff;
+      border-radius: 8px;
     }
-
     .version {
       position: fixed;
       bottom: 10px;
@@ -90,51 +59,68 @@
       font-size: 0.75em;
       color: #888;
     }
-
-    @media screen and (max-width: 600px) {
-      h2 {
-        font-size: 1.5em;
-      }
-
-      #shuffleBtn {
-        font-size: 0.9em;
-        padding: 6px 12px;
-      }
-    }
   </style>
 </head>
 <body>
   <h2>🎵Joda Child 睡前晚安曲🎶</h2>
+  <label for="theme-selector">切換主題:</label>
+  <select id="theme-selector">
+    <option value="blackgold">黑金風</option>
+    <option value="neon">霜光夜</option>
+    <option value="lightblue">明亮白藍</option>
+    <option value="retro">復古磁帶</option>
+  </select>
+
   <div id="nowPlaying">載入中...</div>
   <audio id="audioPlayer" controls></audio>
-  <button onclick="toggleShuffle()" id="shuffleBtn">🔀 隨機播放：關</button>
   <ul id="playlist"></ul>
 
-  <footer>
-    Made with ❤️ on GitHub Pages
-  </footer>
-  <div class="version">v1.0.4</div>
+  <div id="history">
+    <h3>更新日誌</h3>
+    <ul id="historyList"></ul>
+  </div>
+
+  <div class="version">v1.1.0</div>
 
   <script>
+    const themes = {
+      blackgold: `body { background:#1e1e1e;color:#fdd835; } ul#playlist li.active{background:#fdd835;color:#000}`,
+      neon: `body { background:#0f0f2e;color:#39ff14; } ul#playlist li.active{background:#39ff14;color:#000}`,
+      lightblue: `body { background:#f0faff;color:#003366; } ul#playlist li.active{background:#003366;color:#fff}`,
+      retro: `body { background:#3b2f2f;color:#ffd700; } ul#playlist li.active{background:#ffd700;color:#000}`
+    };
+
+    const themeSelector = document.getElementById('theme-selector');
+    themeSelector.addEventListener('change', e => {
+      const styleEl = document.getElementById('theme-style');
+      styleEl.innerHTML = themes[e.target.value];
+    });
+
     let playlist = [];
     let current = 0;
-    let shuffle = false;
-
     const player = document.getElementById('audioPlayer');
     const nowPlaying = document.getElementById('nowPlaying');
+    const historyList = document.getElementById('historyList');
 
-    const versionTag = `v=${Date.now()}`; // 每次載入都唯一
+    const versionTag = `v=${Date.now()}`;
 
     fetch(`playlist.json?${versionTag}`)
       .then(res => res.json())
       .then(data => {
-        playlist = data;
+        playlist = data.tracks || data;
         if (playlist.length === 0) {
-          nowPlaying.textContent = "找不到音樂檔案";
+          nowPlaying.textContent = "\u627e\u4e0d\u5230\u97f3\u6a02\u6a94";
           return;
         }
         setupPlaylist();
         playTrack(current);
+        if (data.history && Array.isArray(data.history)) {
+          data.history.forEach(entry => {
+            const li = document.createElement('li');
+            li.textContent = entry;
+            historyList.appendChild(li);
+          });
+        }
       });
 
     function setupPlaylist() {
@@ -153,10 +139,10 @@
     function playTrack(index) {
       current = index;
       player.src = playlist[current].url;
-      nowPlaying.textContent = `▶ 現在播放：${playlist[current].name}`;
+      nowPlaying.textContent = `\u73fe\u5728\u64ad\u653e: ${playlist[current].name}`;
       highlightCurrent();
       player.play().catch(() => {
-        nowPlaying.textContent = "請點擊播放鍵開始播放";
+        nowPlaying.textContent = "\u8acb\u9ede\u64ad\u653e\u9375\u958b\u59cb\u64ad\u653e";
       });
     }
 
@@ -167,22 +153,9 @@
       });
     }
 
-    function toggleShuffle() {
-      shuffle = !shuffle;
-      document.getElementById('shuffleBtn').textContent = shuffle ? "🔀 隨機播放：開" : "🔀 隨機播放：關";
-    }
-
     player.onended = () => {
-      if (shuffle) {
-        let next;
-        do {
-          next = Math.floor(Math.random() * playlist.length);
-        } while (next === current && playlist.length > 1);
-        playTrack(next);
-      } else {
-        current = (current + 1) % playlist.length;
-        playTrack(current);
-      }
+      current = (current + 1) % playlist.length;
+      playTrack(current);
     };
   </script>
 </body>
